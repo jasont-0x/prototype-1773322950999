@@ -1,0 +1,52 @@
+{% extends "govuk/template.njk" %}
+
+{% block pageTitle %}{{ 'Error: ' if errors and errors['child-in-school'] }}Is your child currently attending school in England? – {{ serviceName }} – GOV.UK{% endblock %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "https://www.gov.uk",
+    serviceName: serviceName,
+    serviceUrl: "/"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukBackLink({ text: "Back", href: "javascript:history.back()" }) }}
+
+    {% if errors and errors['child-in-school'] %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: errors['child-in-school'], href: "#child-in-school" }]
+      }) }}
+    {% endif %}
+
+    <form method="post" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+
+    {{ govukRadios({
+      name: "child-in-school",
+      fieldset: {
+        legend: {
+          text: "Is your child currently attending school in England?",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      
+      errorMessage: errors and errors['child-in-school'] and { text: errors['child-in-school'] },
+      value: data['child-in-school'],
+      items: [
+        { value: "yes", text: "Yes" },
+        { value: "no", text: "No" }
+      ]
+    }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
+    </form>
+
+  </div>
+</div>
+{% endblock %}
