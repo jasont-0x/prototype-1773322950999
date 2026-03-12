@@ -1,0 +1,47 @@
+{% extends "govuk/template.njk" %}
+
+{% block pageTitle %}{{ 'Error: ' if errors and errors['national-insurance-number'] }}What is your National Insurance number? – {{ serviceName }} – GOV.UK{% endblock %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "https://www.gov.uk",
+    serviceName: serviceName,
+    serviceUrl: "/"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukBackLink({ text: "Back", href: "javascript:history.back()" }) }}
+
+    {% if errors and errors['national-insurance-number'] %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: errors['national-insurance-number'], href: "#national-insurance-number" }]
+      }) }}
+    {% endif %}
+
+    <form method="post" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+
+    {{ govukInput({
+      id: "national-insurance-number",
+      name: "national-insurance-number",
+      label: {
+        text: "What is your National Insurance number?",
+        isPageHeading: true,
+        classes: "govuk-label--l"
+      },
+      hint: { text: "For example, QQ 12 34 56 C" },
+      errorMessage: errors and errors['national-insurance-number'] and { text: errors['national-insurance-number'] },
+      value: data['national-insurance-number']
+    }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
+    </form>
+
+  </div>
+</div>
+{% endblock %}
